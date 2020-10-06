@@ -2,15 +2,18 @@ from random import randint, random
 import turtle
 
 class randomWalk:
-    def prob(self,rolls):
+    def __init__(self, moves):
+        self.moves = moves
+
+    def prob(self):
         prb = []
         for j in range(1000):
             S = 0
-            for i in range(rolls):
+            for i in range(self.moves):
                 u = randint(1, 8)
                 if u == 1:
                     S += 1
-            prb.append(S/rolls)
+            prb.append(S/self.moves)
         return prb
 
     def move(self, trtl, step=5):
@@ -35,7 +38,7 @@ class randomWalk:
         elif u == 8:
             trtl.goto(x + step, y - step)
 
-    def rWalk(self, rolls, size=2, bgcolor='#2A2A2A'):
+    def rWalk(self, size=2, bgcolor='#2A2A2A'):
         try:
             colors = ['#e3f252', '#07f9da', '#ff1a00', '#e6e6fa', '#de03f9', '#10e4ae', '#150efd', '#ff80ed']
             trcolor = colors[randint(0, len(colors) - 1)]
@@ -50,7 +53,7 @@ class randomWalk:
             pr.color(trcolor)
             pr.hideturtle()
 
-            for i in range(0, rolls):
+            for i in range(0, self.moves):
                 u = randint(0, 500)
                 if u == 0:
                     u = random() + randint(100, 200)
@@ -63,26 +66,18 @@ class randomWalk:
         except:
             pass
 
-    def histogram(self, number_of_rolls):
+    def histogram(self):
         from matplotlib import pyplot as plt
         import numpy as np
 
-        plt.hist(self.prob(number_of_rolls), bins = 20, log=True)
+        plt.hist(self.prob(), bins = 20, log=True)
 
-        median = np.median(self.prob(number_of_rolls))
+        median = np.median(self.prob())
         plt.axvline(median, color='#FF1A00', label='Probability Median')
         plt.title('Random Walk')
         plt.xlabel('Probability')
         plt.ylabel('Frequency')
         plt.show()
 
-    def complete(self, rolls):
-        try:
-            self.rWalk(rolls)
-            self.histogram(rolls)
-        except:
-            self.histogram(rolls)
-
-
 if __name__ == '__main__':
-    randomWalk().rWalk(int(input('Number of steps:\n')))
+    randomWalk(int(input('Number of steps:\n'))).rWalk()
